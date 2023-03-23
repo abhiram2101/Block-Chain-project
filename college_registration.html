@@ -1,0 +1,167 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title> college Register Form</title>
+    <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="view.css">
+    <link rel="shortcut icon" href="images\favicon.ico" type="image/x-icon">
+</head>
+
+<body>
+	<header>
+		<div class="topnav">
+		  <a class="active home" href="index.html">AAC</a>
+		<div class="topnav-right ">
+		  <a href="admin-login.html">Admin</a>
+		  <a href="Institute.html">Institute Authorization</a>
+		  <a href="View_cert.html">View Certificate</a>
+		  <a href="validate.html"> Validate</a>
+		</div>
+		</div>
+		</header>
+
+
+    <h1>Register Form</h1>
+    <form class="outer-1">
+		<div class="inner-1">
+        <label for="metamaskId">Metamask ID:</label>
+        <input type="text" id="metamaskId" name="metamaskId"><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password"><br>
+        <button class = "b1"type="button" onclick="registerUser()">Register</button>
+	</div>
+	</form>
+
+<!-- </form><label for="metamask-Id">Metamask ID:</label>
+<input type="text" id="metamask-Id" name="metamask-Id"><br><br>
+<label for="pass-word">Password:</label>
+<input type="pass-word" id="pass-word" name="pass-word"><br><br>
+<button type="button" onclick="loginUser()">Login</button>
+</form> -->
+
+
+    <script>
+        var web3 = new Web3(window.ethereum);
+        var contractAddress = '0xC190266D94f248433c6085961C82eC278F99C262'; // Replace with the address of the deployed smart contract
+        var contractABI =  // Leave empty for now, it will be updated in the next step
+
+		[
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_metamaskId",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_password",
+				"type": "string"
+			}
+		],
+		"name": "registerUser",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_metamaskId",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_password",
+				"type": "string"
+			}
+		],
+		"name": "loginUser",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "users",
+		"outputs": [
+			{
+				"internalType": "bytes32",
+				"name": "passwordHash",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "bool",
+				"name": "registered",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+];
+      var contract = new web3.eth.Contract(contractABI, contractAddress);
+
+        async function registerUser() {
+            var metamaskId = document.getElementById("metamaskId").value;
+            var password = document.getElementById("password").value;
+
+            try {
+                const accounts = await web3.eth.requestAccounts();
+                const account = accounts[0];
+                const result = await contract.methods.registerUser(metamaskId, password).send({from: account, value: web3.utils.toWei("0.1", "ether")});
+                console.log(result);
+                alert("User registered successfully!");
+            } catch (error) {
+				if (error.message.includes("User already exists")) {
+        			alert("User is already registered!");
+    			} else {
+        			console.log(error);
+   				 }
+                
+            }
+        }
+
+        async function loginUser() {
+    var metamaskId = document.getElementById("metamask-Id").value;
+    var password = document.getElementById("pass-word").value;
+
+    try {
+        const result = await contract.methods.loginUser(metamaskId, password).call();
+        console.log(result);
+        if (result) {
+            alert("User logged in successfully!");
+        } else {
+            alert("Invalid Metamask ID or password.");
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+       
+        </script>
+
+<footer>
+	<div class="footer">
+	 <p>Copyright @AAC 2023</p>
+   </div>
+   </footer>
+        </body>
+        </html>

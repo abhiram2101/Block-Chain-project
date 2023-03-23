@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>create Insitute node</title>
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.8.2/web3.min.js"></script>
+	<link rel="stylesheet" href="style.css">
+	<link rel="shortcut icon" href="images\favicon.ico" type="image/x-icon">
+
+</head>
+<body>
+	<div class="topnav">
+		<a class="active home" href="index.html">AAC</a>
+	  <div class="topnav-right ">
+		<a href="admin-login.html">Admin</a>
+		<a href="Institute.html">Institute Authorization</a>
+		<a href="View_cert.html">View Certificate</a>
+		<a href="validate.html"> Validate</a>
+	  </div>
+	  </div>
+
+    <h1 class="viewh1">Institute Registration</h1>
+
+    <div class="container-admin">
+    <form id="create-node-form" class="Admin_form1">
+        <label for="metamask-id" class="para">Metamask ID:</label>
+        <input type="text" id="metamask-id" required><br>
+
+        <label for="college-name" class="para">College Name:</label>
+        <input type="text" id="college-name" required><br>
+		<!-- <label for="course-names" class="para">Choose a course:</label> -->
+<!-- <select name="course-names"  id="course-names" class="btn4" >
+    <option value="cse" >Computer Science and Engineering </option>
+  <option value="eee">electrical and electronic Engineering</option>
+  <option value="ece">electrical Engineering</option>
+  <option value="Me">Mechanical Engineering</option>
+  <option value="CE">Civil Engineering</option>
+  <option value="It">Information Technology</option>
+</select>
+<br> -->
+        <label for="branch" class="para">Branch:</label>
+        <input type="text" id="branch" required><br>
+
+        <button type="submit" class="b1">Create Node</button>
+    </form>
+</div>
+	<br>
+
+
+    <!-- <h2>Get Node Count</h2>
+    <button id="get-node-count-button">Get Node Count</button>
+    <br><br>
+
+    <h2>Get Node By Metamask ID</h2>
+    <form id="get-node-form">
+        <label for="get-metamask-id">Metamask ID:</label>
+        <input type="text" id="get-metamask-id" required><br>
+
+        <button type="submit">Get Node</button>
+    </form> -->
+
+    <script>
+        // Add your smart contract address and ABI here
+        const contractAddress = '0xc53fA9a0c1173D3249304402BdB81Bc9E0134E08';
+        const contractABI = [
+		
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_metamaskId",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_ipfsHash",
+				"type": "string"
+			}
+		],
+		"name": "addIpfsHash",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_metamaskId",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_collegeName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_branch",
+				"type": "string"
+			}
+		],
+		"name": "createNode",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "sender",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "nodeId",
+				"type": "uint256"
+			}
+		],
+		"name": "IpfsHashAdded",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "sender",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "nodeId",
+				"type": "uint256"
+			}
+		],
+		"name": "NodeCreated",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_metamaskId",
+				"type": "address"
+			}
+		],
+		"name": "getNodeByMetamaskId",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "address",
+						"name": "metamaskId",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "collegeName",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "branch",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "ipfsHash",
+						"type": "string"
+					}
+				],
+				"internalType": "struct Node.NodeInfo[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getNodeCount",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_ipfsCid",
+				"type": "string"
+			}
+		],
+		"name": "validate",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+
+];
+
+        // Connect to the web3 provider injected by Metamask
+        window.addEventListener('load', async () => {
+            if (window.ethereum) {
+                window.web3 = new Web3(window.ethereum);
+                await window.ethereum.enable();
+            }
+            else if (window.web3) {
+                window.web3 = new Web3(window.web3.currentProvider);
+            }
+            else {
+                console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+            }
+        });
+
+        // Create node form submission handler
+        const createNodeForm = document.getElementById('create-node-form');
+        createNodeForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const metamaskId = document.getElementById('metamask-id').value;
+            const collegeName = document.getElementById('college-name').value;
+            const branch = document.getElementById('branch').value;
+
+            // Create instance of the smart contract
+            const contract = new window.web3.eth.Contract(contractABI, contractAddress);
+
+            // Call createNode function and get the transaction receipt
+            const receipt = await contract.methods.createNode(metamaskId, collegeName, branch).send({ from: window.ethereum.selectedAddress });
+
+            // Get the node ID from the transaction receipt
+            const nodeId = receipt.events.NodeCreated.returnValues.nodeId;
+
+            // Show success popup with transaction and node ID
+            alert(`Node created with ID: ${nodeId}\nTransaction Hash: ${receipt.transactionHash}`);
+        });
+
+        // Get node count button click handler
+        const getNodeCountButton = document.getElementById('get-node-count-button');
+        getNodeCountButton.addEventListener('click', async () => {
+            // Create instance of the smart contract
+            const contract = new window.web3.eth.Contract(contractABI, contractAddress);
+
+            // Call getNodeCount function to get the node count
+            const nodeCount = await contract.methods.getNodeCount().call();
+
+            // Show node count in an alert
+            alert(`Total Nodes: ${nodeCount}`);
+        });
+
+        // Get node form submission handler
+       // Get node form submission handler
+	   const getNodeForm = document.getElementById('get-node-form');
+        getNodeForm.addEventListener('click', async () => {
+            
+            const metamaskId = document.getElementById('get-metamask-id').value;
+
+            
+
+            // Check if node exists
+            if (node.nodeId == 0) {
+                alert(`Node with Metamask ID ${metamaskId} does not exist`);
+            } else {
+                // Show node details in an alert
+                alert(`Node ID: ${node.nodeId}\nMetamask ID: ${node.metamaskId}\nCollege Name: ${node.collegeName}\nBranch: ${node.branch}`);
+            }
+        });
+
+</script>
+</body>
+</html>

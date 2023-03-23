@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>View Certificate</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="view.css">
+    <link rel="shortcut icon" href="images\favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <header>
+        <div class="topnav">
+          <a class="active home" href="index.html">AAC</a>
+        <div class="topnav-right ">
+          <a href="admin-login.html">Admin</a>
+          <a href="Institute.html">Institute Authorization</a>
+          <a href="View_cert.html">View Certificate</a>
+          <a href="validate.html"> Validate</a>
+        </div>
+        </div>
+        </header>
+        
+<div class="outer-1">
+    <div class="inner-1">
+        <h1 class="header">View Certificate</h1>
+        <form action="" id="my_form">
+        <label for="cid">CID:</label>
+        <input type="text" id="cid"><br><br>
+        <button onclick="Url()" class="b4">View</button>
+        </form>
+        
+    <p class="p2">Qmbg7sT5w98m64mpPHDRdfjYw5nMFG5CnFKATgkPWefvLF</p> 
+    <p class="p2">QmPcVMa38qJ2kf5RYWFbZp9c12Gdk8KZVWtBxuHKEeA9m8</p>  
+    <p class="p2">QmfHDCdhC5T43zyzpgHMmoz36GajWqVS9pfZVm1QcnaAsh</p> 
+    </div>
+</div>
+
+        
+ 
+
+
+	<script>
+		function Url() {
+			var cid = document.getElementById("cid").value;
+			var url = "https://ipfs.io/ipfs/" + cid;
+			window.open(url, '_blank');
+		}
+
+        const form = document.getElementById('my_form');
+
+        form.addEventListener('onclick', function handleSubmit(event) {
+            event.preventDefault();
+
+  
+                form.reset();
+            });
+
+
+	</script>
+
+
+
+
+
+
+
+
+
+
+
+<footer>
+    <div class="footer">
+     <p>Copyright @AAC 2023</p>
+   </div>
+   </footer>
+</body>
+</html>

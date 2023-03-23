@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Node Smart Contract</title>
+  <script src="https://cdn.ethers.io/lib/ethers-5.0.umd.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="shortcut icon" href="images\favicon.ico" type="image/x-icon">
+</head>
+<body>
+	<header>
+        <div class="topnav">
+          <a class="active home" href="index.html">AAC</a>
+        <div class="topnav-right ">
+          <a href="login.html">Admin</a>
+		  <a href="Institute.html">Institute Authorization</a>
+		  <a href="View_cert.html">View Certificate</a>
+		  <a href="validate.html"> Validate</a>
+        </div>
+        </div>
+        </header>
+		
+  <h1 class="h1-1">Add IPFS Hash to Node</h1>
+  <div class="container1">
+  <form id="add-ipfs-form" class="container2">
+    <label for="metamask-id">Metamask ID:</label>
+    <input type="text" id="metamask-id"><br>
+
+    <label for="ipfs-hash">IPFS Hash:</label>
+    <input type="text" id="ipfs-hash" ><br>
+
+    <button type="submit" class="b1">Add IPFS Hash</button>
+  </form>
+</div>
+  <script>
+    const contractAddress = "0xEe3E95Ac7c341fF2470944d4257535dA6380aBf5"; // Update with your contract address
+  const contractAbi = 
+  [
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_metamaskId",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_ipfsHash",
+				"type": "string"
+			}
+		],
+		"name": "addIpfsHash",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_metamaskId",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_collegeName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_branch",
+				"type": "string"
+			}
+		],
+		"name": "createNode",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "sender",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "nodeId",
+				"type": "uint256"
+			}
+		],
+		"name": "IpfsHashAdded",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "sender",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "nodeId",
+				"type": "uint256"
+			}
+		],
+		"name": "NodeCreated",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_metamaskId",
+				"type": "address"
+			}
+		],
+		"name": "getNodeByMetamaskId",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "address",
+						"name": "metamaskId",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "collegeName",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "branch",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "ipfsHash",
+						"type": "string"
+					}
+				],
+				"internalType": "struct Node.NodeInfo[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getNodeCount",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_ipfsCid",
+				"type": "string"
+			}
+		],
+		"name": "validate",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+];
+  
+  
+  
+  // Leave empty for now
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+
+    // Initialize contract object
+    const nodeContract = new ethers.Contract(contractAddress, contractAbi, signer);
+
+    const addIpfsForm = document.getElementById('add-ipfs-form');
+    addIpfsForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const metamaskId = document.getElementById('metamask-id').value;
+      const ipfsHash = document.getElementById('ipfs-hash').value;
+
+      try {
+        const tx = await nodeContract.addIpfsHash(metamaskId, ipfsHash);
+        await tx.wait();
+        alert(`IPFS hash ${ipfsHash} added to node with Metamask ID ${metamaskId}`);
+      } catch (error) {
+        alert(`Failed to add IPFS hash to node with Metamask ID ${metamaskId}: ${error.message}`);
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Login</title>
+    <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
+	<link rel="shortcut icon" href="images\favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" href="style.css">
+   <link rel="stylesheet" href="view.css">
+
+    
+
+
+    <script type="text/javascript">
+        var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545")); // set the web3 provider to connect to the local Ethereum node
+        var contractAddress = '0xF4b5db802160f8d74a6960b3e04EcDe831Dbdb4E'; // set the address of the deployed smart contract
+        var contractABI = [
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_email",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_password",
+				"type": "string"
+			}
+		],
+		"name": "register",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_email",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_password",
+				"type": "string"
+			}
+		],
+		"name": "login",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"name": "users",
+		"outputs": [
+			{
+				"internalType": "bytes32",
+				"name": "passwordHash",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "bool",
+				"name": "registered",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+];
+	
+
+		
+	 // set the ABI of the deployed smart contract
+
+        var contract = new web3.eth.Contract(contractABI, contractAddress);
+
+        function registerUser() {
+            var email = document.getElementById("email").value;
+            var password = document.getElementById("password").value;
+
+            contract.methods.register(email, password).send({from: account, value: web3.utils.toWei("0.1", "ether")}, function(error, transactionHash){
+                if (error) {
+                    console.log(error);
+					
+                } else {
+                    console.log(transactionHash);
+                    alert("User registered successfully!");
+                }
+            });
+        }
+
+        function loginUser() {
+            var email = document.getElementById("email").value;
+            var password = document.getElementById("password").value;
+
+            contract.methods.login(email, password).call({from: web3.eth.accounts[0]}, function(error, result) {
+                if (error) {
+                    console.log(error);
+                } else {
+                    console.log(result);
+                    if (result) {
+                        alert("Login successful!");
+						window.location.href="node_creation.html";
+                    } else {
+                        alert("Invalid email or password");
+                    }
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <div class="topnav">
+          <a class="active home" href="index.html">AAC</a>
+        <div class="topnav-right ">
+          <a href="admin-login.html">Admin</a>
+		  <a href="Institute.html">Institute Authorization</a>
+		  <a href="View_cert.html">View Certificate</a>
+		  <a href="validate.html"> Validate</a>
+        </div>
+        </div>
+        </header>
+	<br><br>
+    <h1 class="admin-h1">Login Form</h1>
+    <div class="admin-outer">
+		<div class="connected-box">
+			<button onclick="connectMetamask()" class="btn3"  id="connected">CONNECT TO META MASK</button> <br>
+				<p class="id-connected">Current Account: <span id="accountArea" ></span></p>
+		</div>
+    <form class="admin-inner">
+        <label for="email" style="font-size: 12px;">Email: <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></label>
+        <input type="email" id="email" name="email"  style="font-size: 10px"><br>
+        <label for="password" style="font-size: 12px;">Password:</label>
+        <input type="password" id="password" name="password" style="font-size: 10px"><br><br>
+        <button type="button" onclick="loginUser()" class="btn1" style="margin-left: 80px;">Login</button><br>
+        <label for="register" style="margin-left: 20px; font-size: 10px;"> New here ?</label> 
+        <button type="button" onclick="registerUser()" class="btn1" style="margin-top: 5PX;">Register</button>
+    </form>
+</div>
+	<script>
+		let account;
+		const connectMetamask=async () => {
+			if(window.ethereum !=="undefined"){
+				const accounts= await ethereum.request({method:"eth_requestAccounts"});
+				account=accounts[0];
+				document.getElementById("accountArea").innerHTML=account;
+				document.getElementById("connected").innerHTML= "Connected";
+				document.getElementById("connected").disabled = true;	
+			}
+		}  
+		
+	</script>
+
+<footer>
+	<div class="footer3">
+	  <p>Copyright @AAC 2023</p>
+	</div>
+	</footer> 
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Validate Certificate</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="view.css">
+    <link rel="shortcut icon" href="images\favicon.ico" type="image/x-icon">
+
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.3.4/dist/web3.min.js"></script>
+    <script type="text/javascript">
+
+      // Define the contract ABI
+      const abi = [
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "_ipfsCid",
+              "type": "string"
+            }
+          ],
+          "name": "validate",
+          "outputs": [
+            {
+              "internalType": "string",
+              "name": "",
+              "type": "string"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        }
+      ];
+
+      // Define the contract address
+      const contractAddress = "0x23Bbcc882a20F3E28B34241a637B485dC5DCaf41";
+
+      // Create an instance of the contract
+      const web3 = new Web3(window.ethereum);
+      const contract = new web3.eth.Contract(abi, contractAddress);
+
+      // Define the validate function
+      async function validate() {
+        const cid = document.getElementById("cid").value;
+        const result = await contract.methods.validate(cid).call();
+        if(result=="success")
+        {
+            alert("verified");
+        }
+        else{
+            alert("not found");
+        }
+        
+      }
+    </script>
+  </head>
+  <body>
+    <nav>
+        <div class="topnav">
+          <a class="active home" href="index.html">AAC</a>
+        <div class="topnav-right ">
+          <a href="admin-login.html">Admin</a>
+          <a href="Institute.html">Institute Authorization</a>
+          <a href="View_cert.html">View Certificate</a>
+          <a href="validate.html"> Validate</a>
+        </div>
+        </div>
+        </nav>
+    <div class="outer-1">
+        <div class="inner-1">
+            <h1 class="header">Validate Certificate</h1>
+            <label for="cid">CID:</label>
+            <input type="text" id="cid" name="cid" style="font-size: 12px;" />
+            <br />
+            <button onclick="validate()" class="b1">Validate</button>
+            <p id="result"></p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer2">
+          <p>Copyright @AAC 2023</p>
+        </div>
+        </footer>
+  </body>
+</html>
